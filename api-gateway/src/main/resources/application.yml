@@ -1,0 +1,25 @@
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+server:
+  port: 8060
+eureka:
+  client:
+    instance:
+      hostname: ${EUREKA_HOST:localhost}
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:8769/eureka/
+
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: optional:configserver:http://${CONFIG_SERVER:localhost}:8088
+  cloud:
+    gateway:
+      routes:
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+            - Path=/department/**
